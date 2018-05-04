@@ -297,10 +297,15 @@ class TextDataset(data.Dataset):
         else:
             bbox = None
             data_dir = self.data_dir
-        #
-        img_name = '%s/images/%s.jpg' % (data_dir, key)
-        imgs = get_imgs(img_name, self.imsize,
-                        bbox, self.transform, normalize=self.norm)
+        # Lung dataset is in png format 
+        try:
+            img_name = '%s/images/%s.jpg' % (data_dir, key)
+            imgs = get_imgs(img_name, self.imsize,
+                            bbox, self.transform, normalize=self.norm)
+        except IOError:
+            img_name = '%s/images/%s.png' % (data_dir, key)
+            imgs = get_imgs(img_name, self.imsize,
+                            bbox, self.transform, normalize=self.norm)
         # random select a sentence
         sent_ix = random.randint(0, self.embeddings_num)
         new_sent_ix = index * self.embeddings_num + sent_ix
